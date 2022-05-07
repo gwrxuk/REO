@@ -10,7 +10,7 @@ class PropertyModel extends Model
     use HasFactory;
 
     protected $table = 'Property';
-    protected $primaryKey = 'propertyType';
+    protected $primaryKey = 'propertyId';
     protected $keyType = 'string';
     protected $connection = 'sqlite';
 }

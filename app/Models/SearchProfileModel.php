@@ -11,6 +11,6 @@ class SearchProfileModel extends Model
 
     public $incrementing = false;
     protected $table = 'SearchProfile';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'searchProfileId';
     protected $connection = 'sqlite';
 }

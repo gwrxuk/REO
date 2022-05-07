@@ -19,22 +19,24 @@ class MatchController extends Controller
     public function index($id)
     {
 
-        $propertyModelList = PropertyModel::where('propertyType', $id)->get();
-        if ($propertyModelList->count() == 0) {
-            return json_encode([]);
+        $propertyModel = PropertyModel::where('propertyId', $id)->first();
+        if ($propertyModel === null) {
+            return ["data" => []];
         }
-        $fields = PropertyFieldsModel::where('propertyType', $id)->get();
-        $propertyModel = $propertyModelList[0];
+        $fields = PropertyFieldsModel::where('propertyId', $id)->get();
+        if ($fields->count() === 0) {
+            return ["data" => []];
+        }
         $property = new Property($propertyModel->name, $propertyModel->address, $propertyModel->propertyType, $fields);
 
-        $searchProfilesModelList = SearchProfileModel::where("propertyType", $id)->get();
+        $searchProfilesModelList = SearchProfileModel::where("propertyType", $property->getPropertyType())->get();
         $searchProfileList = [];
         foreach ($searchProfilesModelList as $searchProfileModel) {
             $searchProfileFieldsModel = SearchProfileFieldsModel::where("searchProfileId",
-                $searchProfileModel->id)->get();
+                $searchProfileModel->searchProfileId)->get();
             $searchProfile = new SearchProfile($searchProfileModel->name, $searchProfileModel->propertyType,
                 $searchProfileFieldsModel);
-            $result = $this->calculateScore($searchProfileModel->id, $property->getPropertyFields(),
+            $result = $this->calculateScore($searchProfileModel->searchProfileId, $property->getPropertyFields(),
                 $searchProfile->getSearchProfileFields());
             $searchProfileList[] = $result;
         }
