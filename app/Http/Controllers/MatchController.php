@@ -11,10 +11,7 @@ use App\Models\SearchProfileModel;
 
 class MatchController extends Controller
 {
-    public function __construct()
-    {
-
-    }
+    private $weight = 0.5;
 
     public function index($id)
     {
@@ -60,7 +57,8 @@ class MatchController extends Controller
                 }
             }
         }
-        $result["score"] = $result["strictMatchesCount"] + $result["looseMatchesCount"] * 0.5;
+        $result["score"] = number_format((float)($result["strictMatchesCount"] + $result["looseMatchesCount"] * $this->weight),
+            2);
 
         return $result;
     }
