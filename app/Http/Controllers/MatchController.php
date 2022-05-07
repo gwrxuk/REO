@@ -78,7 +78,11 @@ class MatchController extends Controller
             if ($range[0] !== null && $range[1] === null) {
                 return $range[0] <= $target;
             }
-            return true;
+            if ($range[0] === null && $range[1] === null) {
+                return true;
+            }
+
+            return false;
         } else {
             return $target === $range;
         }
@@ -98,7 +102,12 @@ class MatchController extends Controller
             if ($range[0] !== null && $range[1] === null) {
                 return $range[0] * 0.75 <= $target;
             }
-            return true;
+
+            if ($range[0] === null && $range[1] === null) {
+                return true;
+            }
+
+            return false;
         } else {
             return $target === $range;
         }
