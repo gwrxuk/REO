@@ -50,8 +50,11 @@ class MatchController extends Controller
         $result = ["searchProfileId" => $id, "score" => 0, "strictMatchesCount" => 0, "looseMatchesCount" => 0];
         foreach ($propertyFields as $key => $value) {
             if (isset($searchProfileFields[$key])) {
-                $result["strictMatchesCount"] += (int)$this->calculateStrict($value, $searchProfileFields[$key]);
-                $result["looseMatchesCount"] += (int)$this->calculateLoose($value, $searchProfileFields[$key]);
+                $strict = (int)$this->calculateStrict($value, $searchProfileFields[$key]);
+                $result["strictMatchesCount"] += $strict;
+                if ($strict === 0) {
+                    $result["looseMatchesCount"] += (int)$this->calculateLoose($value, $searchProfileFields[$key]);
+                }
             }
         }
         $result["score"] = $result["strictMatchesCount"] + $result["looseMatchesCount"] * 0.5;
