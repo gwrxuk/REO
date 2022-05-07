@@ -49,6 +49,9 @@ class MatchController extends Controller
     {
         $result = ["searchProfileId" => $id, "score" => 0, "strictMatchesCount" => 0, "looseMatchesCount" => 0];
         foreach ($propertyFields as $key => $value) {
+            if ($value === null) {
+                continue;
+            }
             if (isset($searchProfileFields[$key])) {
                 $strict = (int)$this->calculateStrict($value, $searchProfileFields[$key]);
                 $result["strictMatchesCount"] += $strict;
@@ -66,15 +69,15 @@ class MatchController extends Controller
     {
 
         if (is_array($range)) {
-            if ($range[0] != null && $range[1] != null) {
+            if ($range[0] !== null && $range[1] !== null) {
                 return ($range[0] <= $target && $range[1] >= $target);
             }
 
-            if ($range[0] == null && $range[1] != null) {
+            if ($range[0] === null && $range[1] !== null) {
                 return $range[1] >= $target;
             }
 
-            if ($range[0] != null && $range[1] == null) {
+            if ($range[0] !== null && $range[1] === null) {
                 return $range[0] <= $target;
             }
             return true;
@@ -86,15 +89,15 @@ class MatchController extends Controller
     private function calculateLoose($target, $range)
     {
         if (is_array($range)) {
-            if ($range[0] != null && $range[1] != null) {
+            if ($range[0] !== null && $range[1] !== null) {
                 return ($range[0] * 0.75 <= $target && $range[1] * 1.25 >= $target);
             }
 
-            if ($range[0] == null && $range[1] != null) {
+            if ($range[0] === null && $range[1] !== null) {
                 return $range[1] * 1.25 >= $target;
             }
 
-            if ($range[0] != null && $range[1] == null) {
+            if ($range[0] !== null && $range[1] === null) {
                 return $range[0] * 0.75 <= $target;
             }
             return true;
@@ -105,7 +108,7 @@ class MatchController extends Controller
 
     private function cmp($a, $b)
     {
-        if ($a["score"] == $b["score"]) {
+        if ($a["score"] === $b["score"]) {
             return 0;
         }
         return ($a["score"] < $b["score"]) ? 1 : -1;
